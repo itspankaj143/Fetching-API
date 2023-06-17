@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #container {
+        width: 500px;
+        height: 500px;
+        margin: auto;
+        background-color: gray;
+        border-radius: 10px;
+        box-shadow: 2px 2px 5px gray;
+      }
+      #container:hover {
+        background-color: rosybrown;
+      }
+      #container h2 {
+        margin-left: 150px;
+        margin-top: 20px;
+        color: aquamarine;
+        letter-spacing: 5px;
+        font-size: 30px;
+      }
+      #container span {
+        color: yellow;
+      }
+      #container input {
+        margin-top: 30px;
+        margin-left: 100px;
+        font-size: 1.5rem;
+        border-radius: 4px;
+      }
+      #d1 {
+        width: 400px;
+        height: 500px;
+        margin: auto;
+        /* text-align: center; */
+        margin-top: 20px;
+        /* text-align: center; */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <marquee behavior="" direction=""
+        ><h2>AIRBNB <span>HOTEL</span></h2></marquee
+      >
+      <form id="myForm" name="myForm">
+        <input
+          type="text"
+          name=""
+          id="location"
+          placeholder="Enter city, region, suburb, etc."
+        />
+        <br /><br />
+        <input type="date" name="" id="checkin" />
+        <br /><br />
+        <input type="date" name="" id="checkout" />
+        <br /><br />
+        <input
+          type="number"
+          name=""
+          id="adult"
+          placeholder="Numbers of Adults..."
+        />
+        <br /><br />
+        <input type="submit" value="Search" name="" id="Search" />
+      </form>
+    </div>
+    <div id="d1"></div>
+    <script>
+      let form = document.getElementById("myForm");
+
+      const getData = async (event) => {
+        event.preventDefault();
+        const location = document.getElementById("location").value;
+        const checkin = document.getElementById("checkin").value;
+        const checkout = document.getElementById("checkout").value;
+        const adult = document.getElementById("adult").value;
+        // console.log(location);
+        // console.log(checkin);
+        // console.log(checkout);
+        // console.log(adult);
+        const url = `https://airbnb13.p.rapidapi.com/search-location?location=${location}&checkin=${checkin}&checkout=${checkout}&adults=${adult}&children=0&infants=0&pets=0&page=1&currency=USD`;
+        const options = {
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Key":
+              "cb0ecc96e2mshdcf780f17f255f6p1ad57fjsnc8f8c25e23a6",
+            "X-RapidAPI-Host": "airbnb13.p.rapidapi.com",
+          },
+        };
+
+        try {
+          const response = await fetch(url, options);
+          const result = await response.json();
+          console.log(result);
+          result.results.map((cvalue) => {
+            document.getElementById("d1").innerHTML += `
+            <table border=1 cels>
+              <tr><th>ID:</th><th>URL:</th>
+              <th>DEEPLINK:</th></tr>
+                <tr><td>${cvalue.id}</td>
+                <td>${cvalue.url}</td>
+                <td>${cvalue.deeplink}</td>
+              </table>   `;
+          });
+        } catch (error) {
+          console.error(error);
+          // d1.textContent = error;
+        }
+      };
+
+      form.addEventListener("submit", getData);
+    </script>
+  </body>
+</html>
